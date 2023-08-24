@@ -1,28 +1,25 @@
-package service;
+package tool.service;
 
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import tool.tasks.Epic;
+import tool.tasks.Subtask;
+import tool.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static tasks.Status.*;
+import static tool.tasks.Status.*;
 
 public class Manager {
-    int currentTaskId = 1;
-    int currentEpicId = 1;
-    int currentSubtaskId = 1;
-    HashMap<Integer, Task> taskList = new HashMap<>();
-    HashMap<Integer, Epic> epicList = new HashMap<>();
-    HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+    private int currentId = 1;
+    private HashMap<Integer, Task> taskList = new HashMap<>();
+    private HashMap<Integer, Epic> epicList = new HashMap<>();
+    private HashMap<Integer, Subtask> subtaskList = new HashMap<>();
 
     public void createNewTask(Task task) {
-        task.setId(currentTaskId);
-        task.setStatus(NEW);
+        task.setId(currentId);
         taskList.put(task.getId(), task);
         System.out.println("Задача создана.");
-        currentTaskId++;
+        currentId++;
     }
 
     public void printTaskList() {
@@ -51,11 +48,10 @@ public class Manager {
     }
 
     public void createNewEpic(Epic epic) {
-        epic.setId(currentEpicId);
+        epic.setId(currentId);
         epicList.put(epic.getId(), epic);
-        epic.setStatus(NEW);
         System.out.println("Эпик создан.");
-        currentEpicId++;
+        currentId++;
     }
 
     public void printEpicList() {
@@ -67,6 +63,7 @@ public class Manager {
 
     public void deleteAllEpics() {
         epicList.clear();
+        subtaskList.clear();
         System.out.println("Все эпики успешно удалены.");
     }
 
@@ -75,9 +72,7 @@ public class Manager {
     }
 
     public void deleteEpic(int curId) {
-        Epic curEpic = epicList.get(curId);
-        ArrayList<Integer> curEpicSubtasksList = curEpic.getSubtasksList();
-        for (Integer curEpicSubtaskId : curEpicSubtasksList) {
+        for (Integer curEpicSubtaskId : epicList.get(curId).getSubtasksList()) {
             subtaskList.remove(curEpicSubtaskId);
         }
         epicList.remove(curId);
@@ -89,13 +84,12 @@ public class Manager {
     }
 
     public void createNewSubtask(Subtask subtask) {
-        subtask.setId(currentSubtaskId);
-        subtask.setStatus(NEW);
+        subtask.setId(currentId);
         subtaskList.put(subtask.getId(), subtask);
         Epic curEpic = epicList.get(subtask.getEpicId());
         curEpic.getSubtasksList().add(subtask.getId());
         System.out.println("Подзадача создана.");
-        currentSubtaskId++;
+        currentId++;
     }
 
     public void printSubtaskList() {
@@ -140,31 +134,23 @@ public class Manager {
                 if (currentStatus.equals("") || currentStatus.equals("NEW")) {
                     currentStatus = "NEW";
                 } else {
-                    currentStatus = "IN_PROGRESS";
                     epic.setStatus(IN_PROGRESS);
                     break;
                 }
             } else if (subtask.getStatus() == IN_PROGRESS) {
-                currentStatus = "IN_PROGRESS";
                 epic.setStatus(IN_PROGRESS);
                 break;
             } else if (subtask.getStatus() == DONE) {
                 if (currentStatus.equals("") || currentStatus.equals("DONE")) {
                     currentStatus = "DONE";
                 } else {
-                    currentStatus = "IN_PROGRESS";
                     epic.setStatus(IN_PROGRESS);
                     break;
                 }
             }
         }
-        switch (currentStatus) {
-            case "NEW":
-                epic.setStatus(NEW);
-                break;
-            case "DONE":
-                epic.setStatus(DONE);
-                break;
+        if (currentStatus.equals("DONE")) {
+            epic.setStatus(DONE);
         }
     }
 }

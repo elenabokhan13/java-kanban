@@ -1,4 +1,4 @@
-package tasks;
+package tool.tasks;
 
 public class Subtask extends Task {
     private int epicId;
@@ -8,17 +8,18 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
-    @Override
-    public String toString() {
-        return "Тип: подзадача\nНомер задачи: " + id + "\n" + "Название задачи: " + name + "\n"
-                + "Описание задачи: " + description + "\n" + "Статус: " + status;
-    }
-
     public int getEpicId() {
         return epicId;
     }
 
     public void setEpicId(int epicId) {
         this.epicId = epicId;
+    }
+
+    @Override
+    public String toString() {
+        return "Тип: подзадача\nНомер задачи: " + id + "\n"
+                + "Название задачи: " + name + "\n"
+                + "Описание задачи: " + description + "\n" + "Статус: " + status;
     }
 }

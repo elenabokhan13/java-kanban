@@ -1,10 +1,10 @@
-import service.Manager;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import tool.service.Manager;
+import tool.tasks.Epic;
+import tool.tasks.Subtask;
+import tool.tasks.Task;
 
-import static tasks.Status.DONE;
-import static tasks.Status.IN_PROGRESS;
+import static tool.tasks.Status.DONE;
+import static tool.tasks.Status.IN_PROGRESS;
 
 public class Main {
 
@@ -14,9 +14,9 @@ public class Main {
         Task task2 = new Task("Z2", "22");
         Epic epic1 = new Epic("E1", "11");
         Epic epic2 = new Epic("E2", "22");
-        Subtask subtask1 = new Subtask("S1", "11", 1);
-        Subtask subtask2 = new Subtask("S2", "22", 2);
-        Subtask subtask3 = new Subtask("S3", "33", 2);
+        Subtask subtask1 = new Subtask("S1", "11", 3);
+        Subtask subtask2 = new Subtask("S2", "22", 4);
+        Subtask subtask3 = new Subtask("S3", "33", 4);
 
         manager.createNewTask(task1);
         manager.createNewTask(task2);

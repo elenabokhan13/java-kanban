@@ -1,4 +1,4 @@
-package tasks;
+package tool.tasks;
 
 public class Task {
     protected String name;
@@ -9,12 +9,7 @@ public class Task {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Тип: простая задача\nНомер задачи: " + id + "\n" + "Название задачи: " + name + "\n"
-                + "Описание задачи: " + description + "\n" + "Статус: " + status;
+        this.status = Status.NEW;
     }
 
     public String getName() {
@@ -41,12 +36,18 @@ public class Task {
         this.id = id;
     }
 
-
     public Status getStatus() {
         return status;
     }
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Тип: простая задача\nНомер задачи: " + id + "\n"
+                + "Название задачи: " + name + "\n"
+                + "Описание задачи: " + description + "\n" + "Статус: " + status;
     }
 }

@@ -1,7 +1,7 @@
-package tasks;
+package tool.tasks;
 
 public enum Status {
     NEW,
     IN_PROGRESS,
-    DONE,
+    DONE
 }
