@@ -1,4 +1,4 @@
-package tool.tasks;
+package yandex.practicum.tasks;
 
 public class Task {
     protected String name;

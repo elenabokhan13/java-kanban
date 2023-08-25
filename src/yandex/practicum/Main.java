@@ -1,10 +1,12 @@
-import tool.service.Manager;
-import tool.tasks.Epic;
-import tool.tasks.Subtask;
-import tool.tasks.Task;
+package yandex.practicum;
 
-import static tool.tasks.Status.DONE;
-import static tool.tasks.Status.IN_PROGRESS;
+import yandex.practicum.service.Manager;
+import yandex.practicum.tasks.Epic;
+import yandex.practicum.tasks.Subtask;
+import yandex.practicum.tasks.Task;
+
+import static yandex.practicum.tasks.Status.DONE;
+import static yandex.practicum.tasks.Status.IN_PROGRESS;
 
 public class Main {
 
@@ -34,15 +36,15 @@ public class Main {
         manager.printSubtaskList();
 
         task1.setStatus(DONE);
-        manager.renewTask(task1);
+        manager.updateTask(task1);
         task2.setStatus(IN_PROGRESS);
-        manager.renewTask(task2);
+        manager.updateTask(task2);
         subtask1.setStatus(IN_PROGRESS);
-        manager.renewSubtask(subtask1);
+        manager.updateSubtask(subtask1);
         subtask2.setStatus(DONE);
-        manager.renewSubtask(subtask2);
+        manager.updateSubtask(subtask2);
         subtask3.setStatus(DONE);
-        manager.renewSubtask(subtask3);
+        manager.updateSubtask(subtask3);
 
         System.out.println();
         System.out.println("После обновления статусов");
