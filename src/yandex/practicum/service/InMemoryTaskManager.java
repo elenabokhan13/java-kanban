@@ -9,99 +9,99 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
+
     private int currentId = 1;
-    private Map<Integer, Task> taskList = new HashMap<>();
-    private Map<Integer, Epic> epicList = new HashMap<>();
-    private Map<Integer, Subtask> subtaskList = new HashMap<>();
-    public HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    private final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+
+    public HistoryManager getInMemoryHistoryManager() {
+        return inMemoryHistoryManager;
+    }
+
 
     @Override
     public void createNewTask(Task task) {
         task.setId(currentId);
-        taskList.put(task.getId(), task);
+        tasks.put(task.getId(), task);
         System.out.println("Задача создана.");
         currentId++;
     }
 
     @Override
-    public void printTaskList() {
-        for (Task task : taskList.values()) {
-            System.out.println(task);
-            System.out.println();
-        }
+    public Map<Integer, Task> getTasks() {
+        return tasks;
     }
 
     @Override
     public void deleteAllTasks() {
-        taskList.clear();
+        tasks.clear();
         System.out.println("Все задачи успешно удалены.");
     }
 
     @Override
-    public void getTaskById(int curId) {
-        System.out.println(taskList.get(curId));
-        inMemoryHistoryManager.addTask(taskList.get(curId));
+    public Task getTaskById(int curId) {
+        inMemoryHistoryManager.addTask(tasks.get(curId));
+        return tasks.get(curId);
     }
 
     @Override
     public void deleteTask(int curId) {
-        taskList.remove(curId);
+        tasks.remove(curId);
         System.out.println("Задача успешно удалена.");
     }
 
     @Override
     public void updateTask(Task task) {
-        taskList.put(task.getId(), task);
+        tasks.put(task.getId(), task);
     }
 
     @Override
     public void createNewEpic(Epic epic) {
         epic.setId(currentId);
-        epicList.put(epic.getId(), epic);
+        epics.put(epic.getId(), epic);
         System.out.println("Эпик создан.");
         currentId++;
     }
 
     @Override
-    public void printEpicList() {
-        for (Epic epic : epicList.values()) {
-            System.out.println(epic);
-            System.out.println();
-        }
+    public Map<Integer, Epic> getEpics() {
+        return epics;
     }
 
     @Override
     public void deleteAllEpics() {
-        subtaskList.clear();
-        epicList.clear();
+        subtasks.clear();
+        epics.clear();
         System.out.println("Все эпики успешно удалены.");
     }
 
     @Override
-    public void getEpicById(int curId) {
-        System.out.println(epicList.get(curId));
-        inMemoryHistoryManager.addTask(epicList.get(curId));
+    public Epic getEpicById(int curId) {
+        inMemoryHistoryManager.addTask(epics.get(curId));
+        return epics.get(curId);
     }
 
     @Override
     public void deleteEpic(int curId) {
-        for (Integer curEpicSubtaskId : epicList.get(curId).getSubtaskIds()) {
-            subtaskList.remove(curEpicSubtaskId);
+        for (Integer curEpicSubtaskId : epics.get(curId).getSubtaskIds()) {
+            subtasks.remove(curEpicSubtaskId);
         }
-        epicList.remove(curId);
+        epics.remove(curId);
         System.out.println("Эпик и его подзадачи успешно удалены.");
     }
 
     @Override
     public void updateEpic(Epic epic) {
-        epicList.put(epic.getId(), epic);
+        epics.put(epic.getId(), epic);
     }
 
     @Override
     public void createNewSubtask(Subtask subtask) {
         subtask.setId(currentId);
-        subtaskList.put(subtask.getId(), subtask);
-        Epic curEpic = epicList.get(subtask.getEpicId());
+        subtasks.put(subtask.getId(), subtask);
+        Epic curEpic = epics.get(subtask.getEpicId());
         curEpic.getSubtaskIds().add(subtask.getId());
         setEpicStatus(curEpic);
         System.out.println("Подзадача создана.");
@@ -109,50 +109,58 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void printSubtaskList() {
-        for (Subtask subtask : subtaskList.values()) {
-            System.out.println(subtask);
-            System.out.println();
-        }
+    public Map<Integer, Subtask> getSubtasks() {
+        return subtasks;
     }
 
     @Override
     public void deleteAllSubtasks() {
-        subtaskList.clear();
+        for (Subtask subtask : subtasks.values())
+            if (!epics.get(subtask.getEpicId()).getSubtaskIds().isEmpty()) {
+                epics.get(subtask.getEpicId()).getSubtaskIds().clear();
+                setEpicStatus(epics.get(subtask.getEpicId()));
+            }
+        subtasks.clear();
         System.out.println("Все подзадачи успешно удалены.");
     }
 
     @Override
-    public void getSubtaskById(int curId) {
-        System.out.println(subtaskList.get(curId));
-        inMemoryHistoryManager.addTask(subtaskList.get(curId));
+    public Subtask getSubtaskById(int curId) {
+        inMemoryHistoryManager.addTask(subtasks.get(curId));
+        return subtasks.get(curId);
     }
 
     @Override
     public void deleteSubtask(int curId) {
-        subtaskList.remove(curId);
+        Epic curEpic = epics.get(subtasks.get(curId).getEpicId());
+        curEpic.getSubtaskIds().remove((Integer) curId);
+        subtasks.remove(curId);
+        setEpicStatus(curEpic);
         System.out.println("Подзадача успешно удалена.");
     }
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        subtaskList.put(subtask.getId(), subtask);
-        Epic curEpic = epicList.get(subtask.getEpicId());
+        subtasks.put(subtask.getId(), subtask);
+        Epic curEpic = epics.get(subtask.getEpicId());
         setEpicStatus(curEpic);
     }
 
     @Override
     public void printSubtasksInEpicList(Epic epic) {
         for (Integer curId : epic.getSubtaskIds()) {
-            Subtask subtask = subtaskList.get(curId);
+            Subtask subtask = subtasks.get(curId);
             System.out.println(subtask);
         }
     }
 
     private void setEpicStatus(Epic epic) {
+        if (epic.getSubtaskIds().isEmpty()) {
+            epic.setStatus(Status.NEW);
+        }
         for (int i = 0; i < epic.getSubtaskIds().size(); i++) {
             int curSubtaskId = epic.getSubtaskIds().get(i);
-            Subtask subtask = subtaskList.get(curSubtaskId);
+            Subtask subtask = subtasks.get(curSubtaskId);
             if (i == 0) {
                 if (subtask.getStatus() == Status.DONE) {
                     epic.setStatus(Status.DONE);
