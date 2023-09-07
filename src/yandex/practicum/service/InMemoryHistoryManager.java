@@ -8,17 +8,22 @@ import java.util.List;
 public class InMemoryHistoryManager implements HistoryManager {
 
     private List<Task> getHistory = new ArrayList<>();
+    private static final int MAX_HISTORY_SIZE = 10;
 
     @Override
     public void addTask(Task task) {
-        if (getHistory.size() == 10) {
-            getHistory.remove(0);
+        if (task != null) {
+            if (getHistory.size() == MAX_HISTORY_SIZE) {
+                getHistory.remove(0);
+            }
+            getHistory.add(task);
+        } else {
+            System.out.println("Данная задача еще не создана.");
         }
-        getHistory.add(task);
     }
 
     @Override
-    public void getHistory() {
-        System.out.println(getHistory);
+    public List<Task> getHistory() {
+        return getHistory;
     }
 }

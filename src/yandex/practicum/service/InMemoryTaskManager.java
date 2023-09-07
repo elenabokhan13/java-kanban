@@ -6,12 +6,14 @@ import yandex.practicum.tasks.Task;
 import yandex.practicum.tasks.Status;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private int currentId = 1;
-    private HashMap<Integer, Task> taskList = new HashMap<>();
-    private HashMap<Integer, Epic> epicList = new HashMap<>();
-    private HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+    private Map<Integer, Task> taskList = new HashMap<>();
+    private Map<Integer, Epic> epicList = new HashMap<>();
+    private Map<Integer, Subtask> subtaskList = new HashMap<>();
+    public HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     @Override
     public void createNewTask(Task task) {
@@ -38,7 +40,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void getTaskById(int curId) {
         System.out.println(taskList.get(curId));
-        Managers.getDefaultHistory().addTask(taskList.get(curId));
+        inMemoryHistoryManager.addTask(taskList.get(curId));
     }
 
     @Override
@@ -78,7 +80,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void getEpicById(int curId) {
         System.out.println(epicList.get(curId));
-        Managers.getDefaultHistory().addTask(epicList.get(curId));
+        inMemoryHistoryManager.addTask(epicList.get(curId));
     }
 
     @Override
@@ -123,7 +125,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void getSubtaskById(int curId) {
         System.out.println(subtaskList.get(curId));
-        Managers.getDefaultHistory().addTask(subtaskList.get(curId));
+        inMemoryHistoryManager.addTask(subtaskList.get(curId));
     }
 
     @Override
