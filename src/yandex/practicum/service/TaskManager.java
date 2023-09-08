@@ -4,12 +4,10 @@ import yandex.practicum.tasks.Epic;
 import yandex.practicum.tasks.Subtask;
 import yandex.practicum.tasks.Task;
 
+import java.util.List;
 import java.util.Map;
 
 public interface TaskManager {
-
-    // а метод getHistory() ведь у нас теперь реализуется через HistoryManager, я его отсюда перенесла в интерфейс
-    // HistoryManager после того, как его создала. его нужно вернуть?
 
     void createNewTask(Task task);
 
@@ -48,5 +46,7 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
 
     void printSubtasksInEpicList(Epic epic);
+
+    List<Task> getHistory();
 }
 

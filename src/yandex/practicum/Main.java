@@ -40,57 +40,57 @@ public class Main {
         System.out.println("\nВызов задачи [1]");
         System.out.println(inMemoryTaskManager.getTaskById(1));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов задачи [2]");
         System.out.println(inMemoryTaskManager.getTaskById(2));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов эпика [3]");
         System.out.println(inMemoryTaskManager.getEpicById(3));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов эпика [4]");
         System.out.println(inMemoryTaskManager.getEpicById(4));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов подзадачи [5]");
         System.out.println(inMemoryTaskManager.getSubtaskById(5));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов подзадачи [6]");
         System.out.println(inMemoryTaskManager.getSubtaskById(6));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов подзадачи [7]");
         System.out.println(inMemoryTaskManager.getSubtaskById(7));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов задачи [8]");
         System.out.println(inMemoryTaskManager.getTaskById(1));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов задачи [9]");
         System.out.println(inMemoryTaskManager.getTaskById(2));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов эпика [10]");
         System.out.println(inMemoryTaskManager.getEpicById(3));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         System.out.println("\nВызов эпика [11]");
         System.out.println(inMemoryTaskManager.getEpicById(4));
         System.out.println("\nИстория вызовов:");
-        System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println(inMemoryTaskManager.getHistory());
 
         task1.setStatus(DONE);
         inMemoryTaskManager.updateTask(task1);

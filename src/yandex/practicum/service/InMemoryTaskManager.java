@@ -6,6 +6,7 @@ import yandex.practicum.tasks.Task;
 import yandex.practicum.tasks.Status;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -152,6 +153,11 @@ public class InMemoryTaskManager implements TaskManager {
             Subtask subtask = subtasks.get(curId);
             System.out.println(subtask);
         }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return getInMemoryHistoryManager().getHistory();
     }
 
     private void setEpicStatus(Epic epic) {
