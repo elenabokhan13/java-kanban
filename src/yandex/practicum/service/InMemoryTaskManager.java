@@ -37,8 +37,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
+        for (Integer x : tasks.keySet()) {
+            inMemoryHistoryManager.remove(x);
+        }
         tasks.clear();
-        System.out.println("Все задачи успешно удалены.");
+        System.out.println("\nВсе задачи успешно удалены.");
     }
 
     @Override
@@ -49,8 +52,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTask(int curId) {
+        inMemoryHistoryManager.remove(curId);
         tasks.remove(curId);
-        System.out.println("Задача успешно удалена.");
+        System.out.println("\nЗадача успешно удалена.");
     }
 
     @Override
@@ -73,9 +77,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
+        for (Integer x : subtasks.keySet()) {
+            inMemoryHistoryManager.remove(x);
+        }
+        for (Integer x : epics.keySet()) {
+cd java-kanb            inMemoryHistoryManager.remove(x);
+        }
         subtasks.clear();
         epics.clear();
-        System.out.println("Все эпики успешно удалены.");
+        System.out.println("\nВсе эпики успешно удалены.");
     }
 
     @Override
@@ -86,11 +96,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpic(int curId) {
+
         for (Integer curEpicSubtaskId : epics.get(curId).getSubtaskIds()) {
             subtasks.remove(curEpicSubtaskId);
+            inMemoryHistoryManager.remove(curEpicSubtaskId);
         }
+        inMemoryHistoryManager.remove(curId);
         epics.remove(curId);
-        System.out.println("Эпик и его подзадачи успешно удалены.");
+        System.out.println("\nЭпик и его подзадачи успешно удалены.");
     }
 
     @Override
@@ -121,8 +134,11 @@ public class InMemoryTaskManager implements TaskManager {
                 epics.get(subtask.getEpicId()).getSubtaskIds().clear();
                 setEpicStatus(epics.get(subtask.getEpicId()));
             }
+        for (Integer x : subtasks.keySet()) {
+            inMemoryHistoryManager.remove(x);
+        }
         subtasks.clear();
-        System.out.println("Все подзадачи успешно удалены.");
+        System.out.println("\nВсе подзадачи успешно удалены.");
     }
 
     @Override
@@ -133,11 +149,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubtask(int curId) {
+        inMemoryHistoryManager.remove(curId);
         Epic curEpic = epics.get(subtasks.get(curId).getEpicId());
         curEpic.getSubtaskIds().remove((Integer) curId);
         subtasks.remove(curId);
         setEpicStatus(curEpic);
-        System.out.println("Подзадача успешно удалена.");
+        System.out.println("\nПодзадача успешно удалена.");
     }
 
     @Override
