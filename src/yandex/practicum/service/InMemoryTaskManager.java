@@ -81,7 +81,7 @@ public class InMemoryTaskManager implements TaskManager {
             inMemoryHistoryManager.remove(x);
         }
         for (Integer x : epics.keySet()) {
-cd java-kanb            inMemoryHistoryManager.remove(x);
+            inMemoryHistoryManager.remove(x);
         }
         subtasks.clear();
         epics.clear();
