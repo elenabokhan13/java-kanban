@@ -6,16 +6,12 @@ import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private static final int MAX_HISTORY_SIZE = 10;
     private final CustomLinkedList<Task> historyList = new CustomLinkedList<>();
 
     @Override
     public void addTask(Task task) {
         if (task != null) {
             remove(task.getId());
-            if (historyList.size == MAX_HISTORY_SIZE) {
-                historyList.removeNode(historyList.head);
-            }
             historyList.linkLast(task);
         } else {
             System.out.println("Данная задача еще не создана.");
@@ -23,7 +19,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return historyList.getTasks();
     }
 
@@ -35,10 +31,11 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public class CustomLinkedList<E> {
+        // я использовала size, чтобы выше проверять, равен размер просмотров 10 или нет, чтобы не превысить 10
+        // просмотров, но раз это не нужно больше делать, то конечно убрала
         private Node<Task> tail;
         private Node<Task> head;
-        private int size = 0;
-        private final HashMap<Integer, Node> historyTasks = new HashMap<>();
+        private final Map<Integer, Node> historyTasks = new HashMap<>();
 
         public void linkLast(Task task) {
             final Node<Task> oldTail = tail;
@@ -49,12 +46,11 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else {
                 oldTail.next = newTail;
             }
-            size++;
             historyTasks.put(task.getId(), newTail);
         }
 
-        public ArrayList<Task> getTasks() {
-            ArrayList<Task> tasksHistory = new ArrayList<>();
+        public List<Task> getTasks() {
+            List<Task> tasksHistory = new ArrayList<>();
             Node<Task> curNode = head;
             if (curNode == null) {
                 throw new NoSuchElementException();
@@ -81,7 +77,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else {
                 tail = previous;
             }
-            size = size - 1;
         }
     }
 }
