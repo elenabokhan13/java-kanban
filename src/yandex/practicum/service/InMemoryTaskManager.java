@@ -1,5 +1,6 @@
 package yandex.practicum.service;
 
+import yandex.practicum.exceptions.ManagerSaveException;
 import yandex.practicum.tasks.Epic;
 import yandex.practicum.tasks.Subtask;
 import yandex.practicum.tasks.Task;
@@ -12,11 +13,12 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    protected int currentId = 1;
+
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subtasks = new HashMap<>();
     protected final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    protected int currentId = 1;
 
     public HistoryManager getInMemoryHistoryManager() {
         return inMemoryHistoryManager;
@@ -46,15 +48,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int curId) throws IOException, ManagerSaveException {
-        inMemoryHistoryManager.addTask(tasks.get(curId));
-        return tasks.get(curId);
+    public Task getTaskById(int newId) throws IOException, ManagerSaveException {
+        inMemoryHistoryManager.addTask(tasks.get(newId));
+        return tasks.get(newId);
     }
 
     @Override
-    public void deleteTask(int curId) throws IOException, ManagerSaveException {
-        inMemoryHistoryManager.remove(curId);
-        tasks.remove(curId);
+    public void deleteTask(int newId) throws IOException, ManagerSaveException {
+        inMemoryHistoryManager.remove(newId);
+        tasks.remove(newId);
         System.out.println("\nЗадача успешно удалена.");
     }
 
@@ -90,20 +92,20 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpicById(int curId) throws IOException, ManagerSaveException {
-        inMemoryHistoryManager.addTask(epics.get(curId));
-        return epics.get(curId);
+    public Epic getEpicById(int newId) throws IOException, ManagerSaveException {
+        inMemoryHistoryManager.addTask(epics.get(newId));
+        return epics.get(newId);
     }
 
     @Override
-    public void deleteEpic(int curId) throws IOException, ManagerSaveException {
+    public void deleteEpic(int newId) throws IOException, ManagerSaveException {
 
-        for (Integer curEpicSubtaskId : epics.get(curId).getSubtaskIds()) {
+        for (Integer curEpicSubtaskId : epics.get(newId).getSubtaskIds()) {
             subtasks.remove(curEpicSubtaskId);
             inMemoryHistoryManager.remove(curEpicSubtaskId);
         }
-        inMemoryHistoryManager.remove(curId);
-        epics.remove(curId);
+        inMemoryHistoryManager.remove(newId);
+        epics.remove(newId);
         System.out.println("\nЭпик и его подзадачи успешно удалены.");
     }
 
@@ -143,17 +145,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask getSubtaskById(int curId) throws IOException, ManagerSaveException {
-        inMemoryHistoryManager.addTask(subtasks.get(curId));
-        return subtasks.get(curId);
+    public Subtask getSubtaskById(int newId) throws IOException, ManagerSaveException {
+        inMemoryHistoryManager.addTask(subtasks.get(newId));
+        return subtasks.get(newId);
     }
 
     @Override
-    public void deleteSubtask(int curId) throws IOException, ManagerSaveException {
-        inMemoryHistoryManager.remove(curId);
-        Epic curEpic = epics.get(subtasks.get(curId).getEpicId());
-        curEpic.getSubtaskIds().remove((Integer) curId);
-        subtasks.remove(curId);
+    public void deleteSubtask(int newId) throws IOException, ManagerSaveException {
+        inMemoryHistoryManager.remove(newId);
+        Epic curEpic = epics.get(subtasks.get(newId).getEpicId());
+        curEpic.getSubtaskIds().remove((Integer) newId);
+        subtasks.remove(newId);
         setEpicStatus(curEpic);
         System.out.println("\nПодзадача успешно удалена.");
     }
@@ -167,8 +169,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void printSubtasksInEpicList(Epic epic) {
-        for (Integer curId : epic.getSubtaskIds()) {
-            Subtask subtask = subtasks.get(curId);
+        for (Integer newId : epic.getSubtaskIds()) {
+            Subtask subtask = subtasks.get(newId);
             System.out.println(subtask);
         }
     }

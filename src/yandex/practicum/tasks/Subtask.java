@@ -19,6 +19,11 @@ public class Subtask extends Task {
     }
 
     @Override
+    public TypeOfTask getTypeOfTask() {
+        return TypeOfTask.SUBTASK;
+    }
+
+    @Override
     public String toString() {
         return "Тип: подзадача\nНомер задачи: " + id + "\n"
                 + "Название задачи: " + name + "\n"

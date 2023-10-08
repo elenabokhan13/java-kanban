@@ -20,6 +20,11 @@ public class Epic extends Task {
     }
 
     @Override
+    public TypeOfTask getTypeOfTask() {
+        return TypeOfTask.EPIC;
+    }
+
+    @Override
     public String toString() {
         return "Тип: эпик\nНомер задачи: " + id
                 + "\n" + "Название задачи: " + name + "\n"
