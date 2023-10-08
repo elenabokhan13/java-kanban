@@ -5,9 +5,11 @@ import yandex.practicum.tasks.Epic;
 import yandex.practicum.tasks.Subtask;
 import yandex.practicum.tasks.Task;
 
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ManagerSaveException {
 
         Task task1 = new Task("Z1", "11");
         Task task2 = new Task("Z2", "22");

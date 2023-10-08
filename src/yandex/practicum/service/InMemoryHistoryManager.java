@@ -31,8 +31,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public class CustomLinkedList<E> {
-        // я использовала size, чтобы выше проверять, равен размер просмотров 10 или нет, чтобы не превысить 10
-        // просмотров, но раз это не нужно больше делать, то конечно убрала
         private Node<Task> tail;
         private Node<Task> head;
         private final Map<Integer, Node> historyTasks = new HashMap<>();
