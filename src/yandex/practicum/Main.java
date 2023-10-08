@@ -16,7 +16,7 @@ import static yandex.practicum.service.FileBackedTasksManager.loadFromFile;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, ManagerSaveException {
+    public static void main(String[] args) throws IOException {
 
         File file = new File("data.csv");
 

@@ -13,15 +13,6 @@ import static yandex.practicum.tasks.TypeOfTask.SUBTASK;
 import static yandex.practicum.tasks.TypeOfTask.TASK;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-
-    // Я перенесла этот мейн в основной мейн, изначально сделала здесь, потому что так было напсиано у нас в
-    // ТЗ (дословно): "Для этого создайте метод static void main(String[] args) в классе FileBackedTasksManager
-    // и реализуйте небольшой сценарий". Тоже удивилась, почему здесь.
-    // Сокращения с "cur" по возможности тоже убрала, спасибо за совет, я запомню. Просто наш наставник постоянно
-    // говорит, что так принято делать и чтобы мы так делали :)
-    // В методе loadFromFile я добавила switch-case, но совсем отказаться от if не получается, т.к. в файле, который
-    // считываем микс строк и не во всех есть таски, где пуста, а где-то история, которую тоже надо "прочитать"
-
     final static String HEADER = "id,type,name,status,description,epic\n";
     private File file;
 
@@ -37,7 +28,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    public void save() throws IOException, ManagerSaveException {
+    public void save() throws IOException {
+        // FileWriter, который я использую, выбрасывает IOException, и программа не дает удалить throws. Может
+        // как-то по-другому нужно отключить IOException от FileWriter
         Writer fileWriter = new FileWriter(file);
         Map<Integer, Task> currentTasks;
         currentTasks = super.getTasks();
@@ -46,7 +39,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             try {
                 fileWriter.write(toString(currentTask) + "\n");
             } catch (IOException e) {
-                throw new ManagerSaveException("Произошла ошибка при сохранении задач.");
+                throw new ManagerSaveException("Произошла ошибка при сохранении задач: " + e.getMessage());
             }
         }
         Map<Integer, Subtask> currentSubtasks;
@@ -55,7 +48,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             try {
                 fileWriter.write(toString(curSubtask) + "\n");
             } catch (IOException e) {
-                throw new ManagerSaveException("Произошла ошибка при сохранении подзадач.");
+                throw new ManagerSaveException("Произошла ошибка при сохранении подзадач: " + e.getMessage());
             }
         }
         Map<Integer, Epic> currentEpics;
@@ -64,12 +57,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             try {
                 fileWriter.write(toString(currentEpic) + "\n");
             } catch (IOException e) {
-                throw new ManagerSaveException("Произошла ошибка при сохранении эпиков.");
+                throw new ManagerSaveException("Произошла ошибка при сохранении эпиков: " + e.getMessage());
             }
         }
         fileWriter.write("\n");
         try {
-            fileWriter.write(historyToString(super.inMemoryHistoryManager));
+            fileWriter.write(historyToString(super.getInMemoryHistoryManager()));
         } catch (NoSuchElementException exception) {
         }
         fileWriter.close();
@@ -86,10 +79,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 String[] details = line.split(",");
                 TypeOfTask currentType = TypeOfTask.valueOf(details[1]);
                 switch (currentType) {
-                    case TASK -> manager.tasks.put(manager.fromString(line).getId(), manager.fromString(line));
-                    case SUBTASK -> manager.subtasks.put(manager.fromString(line).getId(),
+                    case TASK -> manager.getTasks().put(manager.fromString(line).getId(), manager.fromString(line));
+                    case SUBTASK -> manager.getSubtasks().put(manager.fromString(line).getId(),
                             (Subtask) manager.fromString(line));
-                    case EPIC -> manager.epics.put(manager.fromString(line).getId(), (Epic) manager.fromString(line));
+                    case EPIC ->
+                            manager.getEpics().put(manager.fromString(line).getId(), (Epic) manager.fromString(line));
                 }
             } else if (line.contains("id")) {
             } else if (line.isBlank()) {
@@ -97,12 +91,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 List<Integer> currentList;
                 currentList = historyFromString(line);
                 for (Integer currentCount : currentList) {
-                    if (manager.tasks.containsKey(currentCount)) {
-                        manager.inMemoryHistoryManager.addTask(manager.tasks.get(currentCount));
-                    } else if (manager.subtasks.containsKey(currentCount)) {
-                        manager.inMemoryHistoryManager.addTask(manager.subtasks.get(currentCount));
-                    } else if (manager.epics.containsKey(currentCount)) {
-                        manager.inMemoryHistoryManager.addTask(manager.epics.get(currentCount));
+                    if (manager.getTasks().containsKey(currentCount)) {
+                        manager.getInMemoryHistoryManager().addTask(manager.getTasks().get(currentCount));
+                    } else if (manager.getSubtasks().containsKey(currentCount)) {
+                        manager.getInMemoryHistoryManager().addTask(manager.getSubtasks().get(currentCount));
+                    } else if (manager.getEpics().containsKey(currentCount)) {
+                        manager.getInMemoryHistoryManager().addTask(manager.getEpics().get(currentCount));
                     }
                 }
             }
@@ -125,28 +119,28 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         if (details[1].equals(TASK.toString())) {
             Task task = new Task(details[2], details[4]);
             task.setId(Integer.parseInt(details[0]));
-            switch (details[3]) {
-                case "NEW" -> task.setStatus(Status.NEW);
-                case "IN_PROGRESS" -> task.setStatus(Status.IN_PROGRESS);
-                case "DONE" -> task.setStatus(Status.DONE);
+            switch (Status.valueOf(details[3])) {
+                case NEW -> task.setStatus(Status.NEW);
+                case IN_PROGRESS -> task.setStatus(Status.IN_PROGRESS);
+                case DONE -> task.setStatus(Status.DONE);
             }
             return task;
         } else if (details[1].equals(SUBTASK.toString())) {
             Task task = new Subtask(details[2], details[4], Integer.parseInt(details[5]));
             task.setId(Integer.parseInt(details[0]));
-            switch (details[3]) {
-                case "NEW" -> task.setStatus(Status.NEW);
-                case "IN_PROGRESS" -> task.setStatus(Status.IN_PROGRESS);
-                case "DONE" -> task.setStatus(Status.DONE);
+            switch (Status.valueOf(details[3])) {
+                case NEW -> task.setStatus(Status.NEW);
+                case IN_PROGRESS -> task.setStatus(Status.IN_PROGRESS);
+                case DONE -> task.setStatus(Status.DONE);
             }
             return task;
         } else {
             Task task = new Epic(details[2], details[4]);
             task.setId(Integer.parseInt(details[0]));
-            switch (details[3]) {
-                case "NEW" -> task.setStatus(Status.NEW);
-                case "IN_PROGRESS" -> task.setStatus(Status.IN_PROGRESS);
-                case "DONE" -> task.setStatus(Status.DONE);
+            switch (Status.valueOf(details[3])) {
+                case NEW -> task.setStatus(Status.NEW);
+                case IN_PROGRESS -> task.setStatus(Status.IN_PROGRESS);
+                case DONE -> task.setStatus(Status.DONE);
             }
             return task;
         }
@@ -173,95 +167,95 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createNewTask(Task task) throws IOException, ManagerSaveException {
+    public void createNewTask(Task task) throws IOException {
         super.createNewTask(task);
         save();
     }
 
     @Override
-    public void deleteAllTasks() throws IOException, ManagerSaveException {
+    public void deleteAllTasks() throws IOException {
         super.deleteAllTasks();
         save();
     }
 
     @Override
-    public Task getTaskById(int newId) throws IOException, ManagerSaveException {
+    public Task getTaskById(int newId) throws IOException {
         super.getTaskById((newId));
         save();
         return tasks.get(newId);
     }
 
     @Override
-    public void deleteTask(int newId) throws IOException, ManagerSaveException {
+    public void deleteTask(int newId) throws IOException {
         super.deleteTask(newId);
         save();
     }
 
     @Override
-    public void updateTask(Task task) throws IOException, ManagerSaveException {
+    public void updateTask(Task task) throws IOException {
         super.updateTask(task);
         save();
     }
 
     @Override
-    public void createNewEpic(Epic epic) throws IOException, ManagerSaveException {
+    public void createNewEpic(Epic epic) throws IOException {
         super.createNewEpic(epic);
         save();
     }
 
     @Override
-    public void deleteAllEpics() throws IOException, ManagerSaveException {
+    public void deleteAllEpics() throws IOException {
         super.deleteAllEpics();
         save();
     }
 
     @Override
-    public Epic getEpicById(int newId) throws IOException, ManagerSaveException {
+    public Epic getEpicById(int newId) throws IOException {
         super.getEpicById(newId);
         save();
         return epics.get(newId);
     }
 
     @Override
-    public void deleteEpic(int newId) throws IOException, ManagerSaveException {
+    public void deleteEpic(int newId) throws IOException {
         super.deleteEpic(newId);
         save();
     }
 
 
     @Override
-    public void updateEpic(Epic epic) throws IOException, ManagerSaveException {
+    public void updateEpic(Epic epic) throws IOException {
         super.updateEpic(epic);
         save();
     }
 
     @Override
-    public void createNewSubtask(Subtask subtask) throws IOException, ManagerSaveException {
+    public void createNewSubtask(Subtask subtask) throws IOException {
         super.createNewSubtask(subtask);
         save();
     }
 
     @Override
-    public void deleteAllSubtasks() throws IOException, ManagerSaveException {
+    public void deleteAllSubtasks() throws IOException {
         super.deleteAllSubtasks();
         save();
     }
 
     @Override
-    public Subtask getSubtaskById(int newId) throws IOException, ManagerSaveException {
+    public Subtask getSubtaskById(int newId) throws IOException {
         super.getSubtaskById(newId);
         save();
         return subtasks.get(newId);
     }
 
     @Override
-    public void deleteSubtask(int newId) throws IOException, ManagerSaveException {
+    public void deleteSubtask(int newId) throws IOException {
         super.deleteSubtask(newId);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws IOException, ManagerSaveException {
+    public void updateSubtask(Subtask subtask) throws IOException {
         super.updateSubtask(subtask);
         save();
     }
