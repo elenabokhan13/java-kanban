@@ -1,30 +1,24 @@
 package yandex.practicum.service;
 
 import yandex.practicum.exceptions.ManagerSaveException;
-import yandex.practicum.tasks.*;
+import yandex.practicum.tasks.Epic;
+import yandex.practicum.tasks.Subtask;
+import yandex.practicum.tasks.Task;
+import yandex.practicum.tasks.TypeOfTask;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static yandex.practicum.tasks.TypeOfTask.SUBTASK;
-import static yandex.practicum.tasks.TypeOfTask.TASK;
+import static yandex.practicum.service.CSVTaskUtils.historyFromString;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     final static String HEADER = "id,type,name,status,description,epic\n";
-    private File file;
+    private final File file;
+    private final CSVTaskUtils csvTaskUtils = new CSVTaskUtils();
 
     public FileBackedTasksManager(File file) {
-        this.file = file;
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
         this.file = file;
     }
 
@@ -35,26 +29,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             currentTasks = super.getTasks();
             fileWriter.write(HEADER);
             for (Task currentTask : currentTasks.values()) {
-                fileWriter.write(toString(currentTask) + "\n");
+                fileWriter.write(csvTaskUtils.toString(currentTask) + "\n");
             }
             Map<Integer, Subtask> currentSubtasks;
             currentSubtasks = super.getSubtasks();
             for (Subtask curSubtask : currentSubtasks.values()) {
-                    fileWriter.write(toString(curSubtask) + "\n");
+                fileWriter.write(csvTaskUtils.toString(curSubtask) + "\n");
             }
             Map<Integer, Epic> currentEpics;
             currentEpics = super.getEpics();
             for (Epic currentEpic : currentEpics.values()) {
-                    fileWriter.write(toString(currentEpic) + "\n");
+                fileWriter.write(csvTaskUtils.toString(currentEpic) + "\n");
             }
             fileWriter.write("\n");
             try {
-                fileWriter.write(historyToString(super.getInMemoryHistoryManager()));
+                fileWriter.write(CSVTaskUtils.historyToString(super.getInMemoryHistoryManager()));
             } catch (NoSuchElementException e) {
             }
             fileWriter.close();
-            }
-            catch (IOException e) {
+        } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка: " + e.getMessage());
         }
     }
@@ -71,10 +64,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     String[] details = line.split(",");
                     TypeOfTask currentType = TypeOfTask.valueOf(details[1]);
                     switch (currentType) {
-                        case TASK -> manager.getTasks().put(manager.fromString(line).getId(), manager.fromString(line));
-                        case SUBTASK -> manager.getSubtasks().put(manager.fromString(line).getId(),
-                                (Subtask) manager.fromString(line));
-                        case EPIC -> manager.getEpics().put(manager.fromString(line).getId(), (Epic) manager.fromString(line));
+                        case TASK -> manager.getTasks().put(manager.csvTaskUtils.fromString(line).getId(),
+                                manager.csvTaskUtils.fromString(line));
+                        case SUBTASK -> manager.getSubtasks().put(manager.csvTaskUtils.fromString(line).getId(),
+                                (Subtask) manager.csvTaskUtils.fromString(line));
+                        case EPIC -> manager.getEpics().put(manager.csvTaskUtils.fromString(line).getId(),
+                                (Epic) manager.csvTaskUtils.fromString(line));
                     }
                 } else if (line.contains("id")) {
                 } else if (line.isBlank()) {
@@ -98,68 +93,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private String toString(Task task) {
-        String currentTask = task.getId() + "," + task.getTypeOfTask() + "," + task.getName() + ","
-                + task.getStatus() + "," + task.getDescription() + ",";
-        if (task.getTypeOfTask() == SUBTASK) {
-            Subtask subtask = (Subtask) task;
-            currentTask = currentTask + subtask.getEpicId();
-        }
-        return currentTask;
-    }
-
-    private Task fromString(String value) {
-        String[] details = value.split(",");
-        if (details[1].equals(TASK.toString())) {
-            Task task = new Task(details[2], details[4]);
-            task.setId(Integer.parseInt(details[0]));
-            switch (Status.valueOf(details[3])) {
-                case NEW -> task.setStatus(Status.NEW);
-                case IN_PROGRESS -> task.setStatus(Status.IN_PROGRESS);
-                case DONE -> task.setStatus(Status.DONE);
-            }
-            return task;
-        } else if (details[1].equals(SUBTASK.toString())) {
-            Task task = new Subtask(details[2], details[4], Integer.parseInt(details[5]));
-            task.setId(Integer.parseInt(details[0]));
-            switch (Status.valueOf(details[3])) {
-                case NEW -> task.setStatus(Status.NEW);
-                case IN_PROGRESS -> task.setStatus(Status.IN_PROGRESS);
-                case DONE -> task.setStatus(Status.DONE);
-            }
-            return task;
-        } else {
-            Task task = new Epic(details[2], details[4]);
-            task.setId(Integer.parseInt(details[0]));
-            switch (Status.valueOf(details[3])) {
-                case NEW -> task.setStatus(Status.NEW);
-                case IN_PROGRESS -> task.setStatus(Status.IN_PROGRESS);
-                case DONE -> task.setStatus(Status.DONE);
-            }
-            return task;
-        }
-    }
-
-    private static String historyToString(HistoryManager manager) {
-        List<Task> currentHistory;
-        currentHistory = manager.getHistory();
-        String currentLine = "";
-        for (Task task : currentHistory) {
-            currentLine = currentLine + task.getId() + ",";
-        }
-        currentLine = currentLine.substring(0, currentLine.length() - 1);
-        return currentLine;
-    }
-
-    private static List<Integer> historyFromString(String value) {
-        List<Integer> currentList = new ArrayList<>();
-        String[] currentValue = value.split(",");
-        for (String currentString : currentValue) {
-            currentList.add(Integer.parseInt(currentString));
-        }
-        return currentList;
-    }
-
     @Override
     public void createNewTask(Task task) {
         super.createNewTask(task);
@@ -173,7 +106,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task getTaskById(int newId){
+    public Task getTaskById(int newId) {
         super.getTaskById((newId));
         save();
         return tasks.get(newId);
@@ -230,13 +163,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteAllSubtasks(){
+    public void deleteAllSubtasks() {
         super.deleteAllSubtasks();
         save();
     }
 
     @Override
-    public Subtask getSubtaskById(int newId){
+    public Subtask getSubtaskById(int newId) {
         super.getSubtaskById(newId);
         save();
         return subtasks.get(newId);

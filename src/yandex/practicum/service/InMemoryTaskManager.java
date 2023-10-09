@@ -1,19 +1,15 @@
 package yandex.practicum.service;
 
-import yandex.practicum.exceptions.ManagerSaveException;
 import yandex.practicum.tasks.Epic;
+import yandex.practicum.tasks.Status;
 import yandex.practicum.tasks.Subtask;
 import yandex.practicum.tasks.Task;
-import yandex.practicum.tasks.Status;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-
-
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subtasks = new HashMap<>();
@@ -131,7 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteAllSubtasks(){
+    public void deleteAllSubtasks() {
         for (Subtask subtask : subtasks.values())
             if (!epics.get(subtask.getEpicId()).getSubtaskIds().isEmpty()) {
                 epics.get(subtask.getEpicId()).getSubtaskIds().clear();
