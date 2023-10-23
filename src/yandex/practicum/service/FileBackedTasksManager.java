@@ -5,18 +5,17 @@ import yandex.practicum.tasks.Epic;
 import yandex.practicum.tasks.Subtask;
 import yandex.practicum.tasks.Task;
 import yandex.practicum.tasks.TypeOfTask;
+import yandex.practicum.utils.CSVTaskUtils;
 
 import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static yandex.practicum.service.CSVTaskUtils.historyFromString;
-
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    final static String HEADER = "id,type,name,status,description,epic\n";
+    final static String HEADER = "id,type,name,status,description,start_time,end_time,duration,epic\n";
     private final File file;
-    private final CSVTaskUtils csvTaskUtils = new CSVTaskUtils();
+    private static final CSVTaskUtils csvTaskUtils = new CSVTaskUtils();
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -43,8 +42,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             fileWriter.write("\n");
             try {
-                fileWriter.write(CSVTaskUtils.historyToString(super.getInMemoryHistoryManager()));
-            } catch (NoSuchElementException e) {
+                fileWriter.write(csvTaskUtils.historyToString(super.getInMemoryHistoryManager()));
+            } catch (NoSuchElementException ignored) {
             }
             fileWriter.close();
         } catch (IOException e) {
@@ -64,18 +63,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     String[] details = line.split(",");
                     TypeOfTask currentType = TypeOfTask.valueOf(details[1]);
                     switch (currentType) {
-                        case TASK -> manager.getTasks().put(manager.csvTaskUtils.fromString(line).getId(),
-                                manager.csvTaskUtils.fromString(line));
-                        case SUBTASK -> manager.getSubtasks().put(manager.csvTaskUtils.fromString(line).getId(),
-                                (Subtask) manager.csvTaskUtils.fromString(line));
-                        case EPIC -> manager.getEpics().put(manager.csvTaskUtils.fromString(line).getId(),
-                                (Epic) manager.csvTaskUtils.fromString(line));
+                        case TASK -> manager.getTasks().put(csvTaskUtils.fromString(line).getId(),
+                                csvTaskUtils.fromString(line));
+                        case SUBTASK -> manager.getSubtasks().put(csvTaskUtils.fromString(line).getId(),
+                                (Subtask) csvTaskUtils.fromString(line));
+                        case EPIC -> manager.getEpics().put(csvTaskUtils.fromString(line).getId(),
+                                (Epic) csvTaskUtils.fromString(line));
                     }
                 } else if (line.contains("id")) {
                 } else if (line.isBlank()) {
                 } else {
                     List<Integer> currentList;
-                    currentList = historyFromString(line);
+                    currentList = csvTaskUtils.historyFromString(line);
                     for (Integer currentCount : currentList) {
                         if (manager.getTasks().containsKey(currentCount)) {
                             manager.getInMemoryHistoryManager().addTask(manager.getTasks().get(currentCount));

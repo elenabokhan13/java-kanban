@@ -1,11 +1,14 @@
 package yandex.practicum.tasks;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
     private List<Integer> subtaskIds = new ArrayList<>();
+    LocalDateTime endTime;
+
 
     public Epic(String name, String description) {
         super(name, description);
@@ -16,15 +19,34 @@ public class Epic extends Task {
     }
 
     @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
     public TypeOfTask getTypeOfTask() {
         return TypeOfTask.EPIC;
     }
 
     @Override
     public String toString() {
-        return "Тип: эпик\nНомер задачи: " + id
-                + "\n" + "Название задачи: " + name + "\n"
-                + "Описание задачи: " + description + "\n" + "Статус: " + status + "\n";
+        String string_new = "Тип: эпик\nНомер эпика: " + id
+                + "\n" + "Название эпика: " + name + "\n"
+                + "Описание эпика: " + description + "\n" + "Статус: " + status + "\n";
+        if (startTime != null) {
+            string_new = string_new + "Время начала эпика: " + getStartTime().format(Task.FORMATTER) + ",\n";
+        }
+        if (endTime != null) {
+            string_new = string_new + "Время завершения эпика: " + getEndTime().format(Task.FORMATTER) + ",\n";
+        }
+        if (duration != null) {
+            string_new = string_new + "Длительность выполнения: " + getDuration().toMinutes() + " минут\n";
+        }
+        return string_new;
     }
 
     @Override

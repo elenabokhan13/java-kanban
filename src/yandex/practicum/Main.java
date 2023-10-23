@@ -21,21 +21,32 @@ public class Main {
 
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
 
-        Task task1 = new Task("task1", "Description task1");
-        Task task2 = new Task("task2", "Description task2");
+        Task task1 = new Task("task1", "Description task1", "35", "20.05.2023_12:00");
+        Task task2 = new Task("task2", "Description task2", "15", "19.05.2023_12:10");
+        Task task3 = new Task("task3", "Description task2", "15", "19.05.2023_12:15");
         Epic epic1 = new Epic("epic1", "Description epic1");
         Epic epic2 = new Epic("epic2", "Description epic2");
-        Subtask subtask1 = new Subtask("sub task1", "Description sub task1", 3);
-        Subtask subtask2 = new Subtask("sub task2", "Description sub task2", 3);
-        Subtask subtask3 = new Subtask("sub task3", "Description sub task3", 3);
+        Subtask subtask1 = new Subtask("sub task1", "Description sub task1", "55",
+                "21.05.2023_13:00", 3);
+        Subtask subtask2 = new Subtask("sub task2", "Description sub task2", "25",
+                "23.05.2023_12:00", 3);
+        Subtask subtask3 = new Subtask("sub task3", "Description sub task3", "10",
+                "20.05.2023_11:00", 3);
+        Subtask subtask4 = new Subtask("sub task4", "Description sub task3", "10",
+                "20.05.2023_11:05", 3);
 
         manager.createNewTask(task1);
         manager.createNewTask(task2);
+        manager.createNewTask(task3);
         manager.createNewEpic(epic1);
         manager.createNewEpic(epic2);
         manager.createNewSubtask(subtask1);
         manager.createNewSubtask(subtask2);
         manager.createNewSubtask(subtask3);
+        manager.createNewSubtask(subtask4);
+
+        System.out.println(manager.getEpics());
+        System.out.println(manager.getPrioritizedTasks());
 
         System.out.println("\nВызов #1");
         System.out.println(manager.getTaskById(1));

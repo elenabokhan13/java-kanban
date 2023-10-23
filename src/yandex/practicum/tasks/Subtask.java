@@ -5,8 +5,8 @@ import java.util.Objects;
 public class Subtask extends Task {
     private int epicId;
 
-    public Subtask(String name, String description, int epicId) {
-        super(name, description);
+    public Subtask(String name, String description, String duration, String startTime, int epicId) {
+        super(name, description, duration, startTime);
         this.epicId = epicId;
     }
 
@@ -21,9 +21,12 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Тип: подзадача\nНомер задачи: " + id + "\n"
-                + "Название задачи: " + name + "\n"
-                + "Описание задачи: " + description + "\n" + "Статус: " + status + "\n";
+        return "Тип: подзадача\nНомер подзадачи: " + id + "\n"
+                + "Название подзадачи: " + name + "\n"
+                + "Описание подзадачи: " + description + "\n" + "Статус: " + status + "\n"
+                + "Время начала подзадачи: " + startTime.format(FORMATTER) + "\n"
+                + "Время завершения подзадачи: " + getEndTime().format(FORMATTER) + "\n"
+                + "Длительность выполнения: " + duration.toMinutes() + " минут\n";
     }
 
     @Override
