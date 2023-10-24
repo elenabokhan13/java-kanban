@@ -24,8 +24,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createNewTask(Task task) {
         task.setId(currentId);
-        for (Task task_current : prioritizedTasks) {
-            if (task.getEndTime().isBefore(task_current.getStartTime()) || task.getStartTime().isAfter(task_current
+        for (Task taskCurrent : prioritizedTasks) {
+            if (task.getEndTime().isBefore(taskCurrent.getStartTime()) || task.getStartTime().isAfter(taskCurrent
                     .getEndTime())) {
             } else {
                 System.out.println("Задача " + task.getName() + " не может быть создана, т.к. она наслаивается на " +
@@ -80,16 +80,17 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         for (Task task_current : prioritizedTasks) {
-            if (task.getStartTime().isEqual(task_current.getStartTime()) && task.getEndTime().isEqual(task_current.getEndTime())) {
+            if (task.getStartTime().isEqual(task_current.getStartTime()) && task.getEndTime()
+                    .isEqual(task_current.getEndTime())) {
                 tasks.put(task.getId(), task);
                 prioritizedTasks.add(task);
                 return;
             }
-            if (task.getEndTime().isBefore(task_current.getStartTime()) || task.getStartTime().isAfter(task_current.getEndTime())) {
-
+            if (task.getEndTime().isBefore(task_current.getStartTime()) || task.getStartTime()
+                    .isAfter(task_current.getEndTime())) {
             } else {
-                System.out.println("Задача " + task.getName() + " не может быть обновлена, т.к. она наслаивается на другую задачу. Измените ее сроки.");
-
+                System.out.println("Задача " + task.getName() + " не может быть обновлена, т.к. она наслаивается на " +
+                        "другую задачу. Измените ее сроки.");
                 return;
             }
         }
@@ -130,7 +131,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpic(int newId) {
-
         for (Integer curEpicSubtaskId : epics.get(newId).getSubtaskIds()) {
             subtasks.remove(curEpicSubtaskId);
             inMemoryHistoryManager.remove(curEpicSubtaskId);
@@ -148,9 +148,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createNewSubtask(Subtask subtask) {
         subtask.setId(currentId);
-        for (Task task_current : prioritizedTasks) {
-            if (subtask.getEndTime().isBefore(task_current.getStartTime()) || subtask.getStartTime()
-                    .isAfter(task_current.getEndTime())) {
+        for (Task taskCurrent : prioritizedTasks) {
+            if (subtask.getEndTime().isBefore(taskCurrent.getStartTime()) || subtask.getStartTime()
+                    .isAfter(taskCurrent.getEndTime())) {
             } else {
                 System.out.println("Подзадача " + subtask.getName() + " не может быть создана, т.к. она наслаивается " +
                         "на другую задачу. Измените ее сроки.");
@@ -292,18 +292,20 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void setEpicEndTime(Epic epic) {
-        LocalDateTime lastTime;
-        if (epic.getSubtaskIds().size() != 0) {
-            lastTime = subtasks.get(epic.getSubtaskIds().get(0)).getEndTime();
-            for (Integer i : epic.getSubtaskIds()) {
-                LocalDateTime time = subtasks.get(i).getEndTime();
-                if (time.isAfter(lastTime)) {
-                    lastTime = time;
-                }
-            }
-            epic.setEndTime(lastTime);
+        if (epic.getSubtaskIds().size() == 0) {
+            return;
         }
+        LocalDateTime lastTime;
+        lastTime = subtasks.get(epic.getSubtaskIds().get(0)).getEndTime();
+        for (Integer i : epic.getSubtaskIds()) {
+            LocalDateTime time = subtasks.get(i).getEndTime();
+            if (time.isAfter(lastTime)) {
+                lastTime = time;
+            }
+        }
+        epic.setEndTime(lastTime);
     }
+
 
     private void setEpicDuration(Epic epic) {
         if (epic.getSubtaskIds().size() != 0) {

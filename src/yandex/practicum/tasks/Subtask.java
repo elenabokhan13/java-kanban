@@ -1,7 +1,5 @@
 package yandex.practicum.tasks;
 
-import java.util.Objects;
-
 public class Subtask extends Task {
     private int epicId;
 
@@ -31,13 +29,7 @@ public class Subtask extends Task {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
-        Subtask otherSubtask = (Subtask) obj;
-        return Objects.equals(name, otherSubtask.name) &&
-                Objects.equals(description, otherSubtask.description) &&
-                (epicId == otherSubtask.epicId);
+        return super.equals(obj);
     }
 
     @Override

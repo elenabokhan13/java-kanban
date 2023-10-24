@@ -6,13 +6,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy_HH:mm");
     protected String name;
     protected String description;
     protected int id;
     protected Status status;
     protected Duration duration;
     protected LocalDateTime startTime;
-    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy_HH:mm");
 
     public Task(String name, String description, String duration, String startTime) {
         this.name = name;
@@ -96,7 +96,10 @@ public class Task {
         if (this.getClass() != obj.getClass()) return false;
         Task otherTask = (Task) obj;
         return Objects.equals(name, otherTask.name) &&
-                Objects.equals(description, otherTask.description);
+                Objects.equals(description, otherTask.description) &&
+                Objects.equals(startTime, otherTask.startTime) &&
+                Objects.equals(duration, otherTask.duration) &&
+                Objects.equals(status, otherTask.status);
     }
 
     @Override

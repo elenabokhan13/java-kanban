@@ -10,10 +10,9 @@ import yandex.practicum.utils.CSVTaskUtils;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    final static String HEADER = "id,type,name,status,description,start_time,end_time,duration,epic\n";
+    private final static String HEADER = "id,type,name,status,description,start_time,end_time,duration,epic\n";
     private final File file;
     private static final CSVTaskUtils csvTaskUtils = new CSVTaskUtils();
 
@@ -41,10 +40,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 fileWriter.write(csvTaskUtils.toString(currentEpic) + "\n");
             }
             fileWriter.write("\n");
-            try {
-                fileWriter.write(csvTaskUtils.historyToString(super.getInMemoryHistoryManager()));
-            } catch (NoSuchElementException ignored) {
-            }
+
+            fileWriter.write(csvTaskUtils.historyToString(super.getInMemoryHistoryManager()));
+
             fileWriter.close();
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка: " + e.getMessage());

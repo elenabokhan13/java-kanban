@@ -3,12 +3,10 @@ package yandex.practicum.tasks;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Epic extends Task {
     private List<Integer> subtaskIds = new ArrayList<>();
-    LocalDateTime endTime;
-
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -51,12 +49,7 @@ public class Epic extends Task {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
-        Epic otherEpic = (Epic) obj;
-        return Objects.equals(name, otherEpic.name) &&
-                Objects.equals(description, otherEpic.description);
+        return super.equals(obj);
     }
 
     @Override

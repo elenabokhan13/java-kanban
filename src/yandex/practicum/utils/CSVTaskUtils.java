@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static yandex.practicum.tasks.TypeOfTask.SUBTASK;
 import static yandex.practicum.tasks.TypeOfTask.TASK;
@@ -61,14 +62,18 @@ public class CSVTaskUtils {
     }
 
     public String historyToString(HistoryManager manager) {
-        List<Task> currentHistory;
-        currentHistory = manager.getHistory();
-        String currentLine = "";
-        for (Task task : currentHistory) {
-            currentLine = currentLine + task.getId() + ",";
+        try {
+            List<Task> currentHistory;
+            currentHistory = manager.getHistory();
+            String currentLine = "";
+            for (Task task : currentHistory) {
+                currentLine = currentLine + task.getId() + ",";
+            }
+            currentLine = currentLine.substring(0, currentLine.length() - 1);
+            return currentLine;
+        } catch (NoSuchElementException ignored) {
+            return "";
         }
-        currentLine = currentLine.substring(0, currentLine.length() - 1);
-        return currentLine;
     }
 
     public List<Integer> historyFromString(String value) {
