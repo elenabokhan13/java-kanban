@@ -79,15 +79,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
-        for (Task task_current : prioritizedTasks) {
-            if (task.getStartTime().isEqual(task_current.getStartTime()) && task.getEndTime()
-                    .isEqual(task_current.getEndTime())) {
+        for (Task taskCurrent : prioritizedTasks) {
+            if (task.getStartTime().isEqual(taskCurrent.getStartTime()) && task.getEndTime()
+                    .isEqual(taskCurrent.getEndTime())) {
                 tasks.put(task.getId(), task);
                 prioritizedTasks.add(task);
                 return;
             }
-            if (task.getEndTime().isBefore(task_current.getStartTime()) || task.getStartTime()
-                    .isAfter(task_current.getEndTime())) {
+            if (task.getEndTime().isBefore(taskCurrent.getStartTime()) || task.getStartTime()
+                    .isAfter(taskCurrent.getEndTime())) {
             } else {
                 System.out.println("Задача " + task.getName() + " не может быть обновлена, т.к. она наслаивается на " +
                         "другую задачу. Измените ее сроки.");
@@ -209,9 +209,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        for (Task task_current : prioritizedTasks) {
-            if (subtask.getStartTime().isEqual(task_current.getStartTime()) && subtask.getEndTime()
-                    .isEqual(task_current.getEndTime())) {
+        for (Task taskCurrent : prioritizedTasks) {
+            if (subtask.getStartTime().isEqual(taskCurrent.getStartTime()) && subtask.getEndTime()
+                    .isEqual(taskCurrent.getEndTime())) {
                 subtasks.put(subtask.getId(), subtask);
                 prioritizedTasks.add(subtask);
                 Epic curEpic = epics.get(subtask.getEpicId());
@@ -219,8 +219,8 @@ public class InMemoryTaskManager implements TaskManager {
                 setEpicTimes(curEpic);
                 return;
             }
-            if (subtask.getEndTime().isBefore(task_current.getStartTime()) || subtask.getStartTime()
-                    .isAfter(task_current.getEndTime())) {
+            if (subtask.getEndTime().isBefore(taskCurrent.getStartTime()) || subtask.getStartTime()
+                    .isAfter(taskCurrent.getEndTime())) {
             } else {
                 System.out.println("Подзадача " + subtask.getName() + " не может быть обновлена, т.к. она " +
                         "наслаивается на другую задачу. Измените ее сроки.");

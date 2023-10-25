@@ -13,20 +13,21 @@ import static yandex.practicum.service.FileBackedTasksManager.loadFromFile;
 
 class FileBackedTasksManagerTest extends TaskManagerTest {
 
+
     @BeforeEach
     public void createManager() {
         File file = new File("data.csv");
         taskManager = new FileBackedTasksManager(file);
-        final NoSuchElementException exception = assertThrows(NoSuchElementException.class, ()
-                -> taskManager.getHistory());
     }
 
     @Test
     @Override
     public void createNewTaskTest() {
+        final NoSuchElementException exception = assertThrows(NoSuchElementException.class, ()
+                -> taskManager.getHistory());
         super.createNewTaskTest();
-        FileBackedTasksManager manager1 = loadFromFile(new File("data.csv"));
-        assertEquals(manager1.getHistory(), taskManager.getHistory());
+        FileBackedTasksManager managerNew = loadFromFile(new File("data.csv"));
+        assertEquals(managerNew.getHistory(), taskManager.getHistory());
     }
 
     @Test
@@ -71,8 +72,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
     @Override
     public void createNewEpicTest() {
         super.createNewEpicTest();
-        FileBackedTasksManager manager1 = loadFromFile(new File("data.csv"));
-        assertEquals(manager1.getHistory(), taskManager.getHistory());
+        FileBackedTasksManager managerNew = loadFromFile(new File("data.csv"));
+        assertEquals(managerNew.getHistory(), taskManager.getHistory());
     }
 
     @Test
@@ -109,8 +110,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
     @Override
     public void createNewSubtaskTest() {
         super.createNewSubtaskTest();
-        FileBackedTasksManager manager1 = loadFromFile(new File("data.csv"));
-        assertEquals(manager1.getHistory(), taskManager.getHistory());
+        FileBackedTasksManager managerNew = loadFromFile(new File("data.csv"));
+        assertEquals(managerNew.getHistory(), taskManager.getHistory());
     }
 
     @Test

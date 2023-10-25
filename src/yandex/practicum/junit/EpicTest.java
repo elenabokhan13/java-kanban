@@ -11,25 +11,25 @@ import yandex.practicum.tasks.Subtask;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EpicTest {
-    Epic epic1 = new Epic("epic1", "Description epic1");
-    Subtask subtask1 = new Subtask("sub task1", "Description sub task1", "55",
+    private Epic epic1 = new Epic("epic1", "Description epic1");
+    private Subtask subtask1 = new Subtask("sub task1", "Description sub task1", "55",
             "19.05.2023_12:00", 1);
-    Subtask subtask2 = new Subtask("sub task2", "Description sub task2", "25",
+    private Subtask subtask2 = new Subtask("sub task2", "Description sub task2", "25",
             "20.05.2023_12:00", 1);
-    Subtask subtask3 = new Subtask("sub task3", "Description sub task3", "10",
+    private Subtask subtask3 = new Subtask("sub task3", "Description sub task3", "10",
             "21.05.2023_12:00", 1);
-    InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
+    private InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
 
 
     @Test
     public void epicEmpty() {
         inMemoryTaskManager.createNewEpic(epic1);
 
-        Assertions.assertEquals(Status.NEW, inMemoryTaskManager.getEpicById(1).getStatus());
+        assertEquals(Status.NEW, inMemoryTaskManager.getEpicById(1).getStatus());
     }
 
     @Test
-    public void epicAllSubtasksNEW() {
+    public void epicAllSubtasksNew() {
         inMemoryTaskManager.createNewEpic(epic1);
         inMemoryTaskManager.createNewSubtask(subtask1);
         inMemoryTaskManager.createNewSubtask(subtask2);
@@ -39,7 +39,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicAllSubtasksDONE() {
+    public void epicAllSubtasksDone() {
         inMemoryTaskManager.createNewEpic(epic1);
         inMemoryTaskManager.createNewSubtask(subtask1);
         inMemoryTaskManager.createNewSubtask(subtask2);
@@ -57,7 +57,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicSubtasksNEWAndDONE() {
+    public void epicSubtasksNewAndDone() {
         inMemoryTaskManager.createNewEpic(epic1);
         inMemoryTaskManager.createNewSubtask(subtask1);
         inMemoryTaskManager.createNewSubtask(subtask2);
@@ -70,7 +70,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicAllSubtasksIN_PROGRESS() {
+    public void epicAllSubtasksInProgress() {
         inMemoryTaskManager.createNewEpic(epic1);
         inMemoryTaskManager.createNewSubtask(subtask1);
         inMemoryTaskManager.createNewSubtask(subtask2);

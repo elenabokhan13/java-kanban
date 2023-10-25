@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class HistoryManagerTest {
-    HistoryManager historyManager = new InMemoryHistoryManager();
-    TaskManager taskManager = (InMemoryTaskManager) Managers.getDefault();
-    Task task1 = new Task("task1", "Description task1", "35", "19.05.2023_12:00");
-    Task task2 = new Task("task2", "Description task2", "15", "19.05.2023_13:10");
-    Task task3 = new Task("task3", "Description task3", "45", "20.05.2023_18:10");
-    Task task4 = new Task("task4", "Description task4", "15", "29.05.2023_12:10");
-    Task task5 = new Task("task5", "Description task5", "40", "23.05.2023_15:10");
+    private HistoryManager historyManager = new InMemoryHistoryManager();
+    private TaskManager taskManager = (InMemoryTaskManager) Managers.getDefault();
+    private Task task1 = new Task("task1", "Description task1", "35", "19.05.2023_12:00");
+    private Task task2 = new Task("task2", "Description task2", "15", "19.05.2023_13:10");
+    private Task task3 = new Task("task3", "Description task3", "45", "20.05.2023_18:10");
+    private Task task4 = new Task("task4", "Description task4", "15", "29.05.2023_12:10");
+    private Task task5 = new Task("task5", "Description task5", "40", "23.05.2023_15:10");
 
 
     @AfterEach
