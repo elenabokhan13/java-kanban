@@ -5,124 +5,126 @@ import org.junit.jupiter.api.Test;
 import yandex.practicum.service.InMemoryTaskManager;
 import yandex.practicum.service.Managers;
 
+import java.io.IOException;
+
 public class InMemoryTaskManagerTest extends TaskManagerTest {
 
     @BeforeEach
-    public void createManager() {
+    public void createManager() throws IOException, InterruptedException {
         taskManager = (InMemoryTaskManager) Managers.getDefault();
     }
 
     @Test
     @Override
-    public void createNewTaskTest() {
+    public void createNewTaskTest() throws IOException, InterruptedException {
         super.createNewTaskTest();
     }
 
     @Test
     @Override
-    public void getTasksTest() {
+    public void getTasksTest() throws IOException, InterruptedException {
         super.getTasksTest();
     }
 
     @Test
     @Override
-    public void getPrioritizedTasksTest() {
+    public void getPrioritizedTasksTest() throws IOException, InterruptedException {
         super.getPrioritizedTasksTest();
     }
 
     @Test
     @Override
-    public void deleteAllTasksTest() {
+    public void deleteAllTasksTest() throws IOException, InterruptedException {
         super.deleteAllTasksTest();
     }
 
     @Test
     @Override
-    public void getTaskByIdTest() {
+    public void getTaskByIdTest() throws IOException, InterruptedException {
         super.getTaskByIdTest();
     }
 
     @Test
     @Override
-    public void deleteTaskTest() {
+    public void deleteTaskTest() throws IOException, InterruptedException {
         super.deleteTaskTest();
     }
 
     @Test
     @Override
-    public void updateTaskTest() {
+    public void updateTaskTest() throws IOException, InterruptedException {
         super.updateTaskTest();
     }
 
     @Test
     @Override
-    public void createNewEpicTest() {
+    public void createNewEpicTest() throws IOException, InterruptedException {
         super.createNewEpicTest();
     }
 
     @Test
     @Override
-    public void getEpicsTest() {
+    public void getEpicsTest() throws IOException, InterruptedException {
         super.getEpicsTest();
     }
 
     @Test
     @Override
-    public void deleteAllEpicsTest() {
+    public void deleteAllEpicsTest() throws IOException, InterruptedException {
         super.deleteAllEpicsTest();
     }
 
     @Test
     @Override
-    public void getEpicByIdTest() {
+    public void getEpicByIdTest() throws IOException, InterruptedException {
         super.getEpicByIdTest();
     }
 
     @Test
     @Override
-    public void deleteEpicTest() {
+    public void deleteEpicTest() throws IOException, InterruptedException {
         super.deleteEpicTest();
     }
 
     @Test
     @Override
-    public void updateEpicTest() {
+    public void updateEpicTest() throws IOException, InterruptedException {
         super.updateEpicTest();
     }
 
     @Test
     @Override
-    public void createNewSubtaskTest() {
+    public void createNewSubtaskTest() throws IOException, InterruptedException {
         super.createNewSubtaskTest();
     }
 
     @Test
     @Override
-    public void getSubtasksTest() {
+    public void getSubtasksTest() throws IOException, InterruptedException {
         super.getSubtasksTest();
     }
 
     @Test
     @Override
-    public void deleteAllSubtasksTest() {
+    public void deleteAllSubtasksTest() throws IOException, InterruptedException {
         super.deleteAllSubtasksTest();
     }
 
     @Test
     @Override
-    public void getSubtaskByIdTest() {
+    public void getSubtaskByIdTest() throws IOException, InterruptedException {
         super.getSubtaskByIdTest();
     }
 
     @Test
     @Override
-    public void deleteSubtaskTest() {
+    public void deleteSubtaskTest() throws IOException, InterruptedException {
         super.deleteSubtaskTest();
     }
 
     @Test
     @Override
-    public void updateSubtaskTest() {
+    public void updateSubtaskTest() throws IOException, InterruptedException {
         super.updateSubtaskTest();
     }
 }

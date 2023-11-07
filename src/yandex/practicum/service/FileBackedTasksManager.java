@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final static String HEADER = "id,type,name,status,description,start_time,end_time,duration,epic\n";
-    private final File file;
+    protected final File file;
     private static final CSVTaskUtils csvTaskUtils = new CSVTaskUtils();
 
     public FileBackedTasksManager(File file) {
@@ -91,95 +91,95 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createNewTask(Task task) {
+    public void createNewTask(Task task) throws IOException, InterruptedException {
         super.createNewTask(task);
         save();
     }
 
     @Override
-    public void deleteAllTasks() {
+    public void deleteAllTasks() throws IOException, InterruptedException {
         super.deleteAllTasks();
         save();
     }
 
     @Override
-    public Task getTaskById(int newId) {
+    public Task getTaskById(int newId) throws IOException, InterruptedException {
         super.getTaskById((newId));
         save();
         return tasks.get(newId);
     }
 
     @Override
-    public void deleteTask(int newId) {
+    public void deleteTask(int newId) throws IOException, InterruptedException {
         super.deleteTask(newId);
         save();
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws IOException, InterruptedException {
         super.updateTask(task);
         save();
     }
 
     @Override
-    public void createNewEpic(Epic epic) {
+    public void createNewEpic(Epic epic) throws IOException, InterruptedException {
         super.createNewEpic(epic);
         save();
     }
 
     @Override
-    public void deleteAllEpics() {
+    public void deleteAllEpics() throws IOException, InterruptedException {
         super.deleteAllEpics();
         save();
     }
 
     @Override
-    public Epic getEpicById(int newId) {
+    public Epic getEpicById(int newId) throws IOException, InterruptedException {
         super.getEpicById(newId);
         save();
         return epics.get(newId);
     }
 
     @Override
-    public void deleteEpic(int newId) {
+    public void deleteEpic(int newId) throws IOException, InterruptedException {
         super.deleteEpic(newId);
         save();
     }
 
 
     @Override
-    public void updateEpic(Epic epic) {
+    public void updateEpic(Epic epic) throws IOException, InterruptedException {
         super.updateEpic(epic);
         save();
     }
 
     @Override
-    public void createNewSubtask(Subtask subtask) {
+    public void createNewSubtask(Subtask subtask) throws IOException, InterruptedException {
         super.createNewSubtask(subtask);
         save();
     }
 
     @Override
-    public void deleteAllSubtasks() {
+    public void deleteAllSubtasks() throws IOException, InterruptedException {
         super.deleteAllSubtasks();
         save();
     }
 
     @Override
-    public Subtask getSubtaskById(int newId) {
+    public Subtask getSubtaskById(int newId) throws IOException, InterruptedException {
         super.getSubtaskById(newId);
         save();
         return subtasks.get(newId);
     }
 
     @Override
-    public void deleteSubtask(int newId) {
+    public void deleteSubtask(int newId) throws IOException, InterruptedException {
         super.deleteSubtask(newId);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws IOException, InterruptedException {
         super.updateSubtask(subtask);
         save();
     }

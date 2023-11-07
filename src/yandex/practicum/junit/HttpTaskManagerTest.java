@@ -1,33 +1,47 @@
 package yandex.practicum.junit;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import yandex.practicum.service.FileBackedTasksManager;
+import yandex.practicum.client.KVTaskClient;
+import yandex.practicum.server.KVServer;
+import yandex.practicum.service.Managers;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static yandex.practicum.service.FileBackedTasksManager.loadFromFile;
 
-class FileBackedTasksManagerTest extends TaskManagerTest {
+class HttpTaskManagerTest extends TaskManagerTest {
+
+    private KVServer kvServer = new KVServer();
+    KVTaskClient kvTaskClient;
+
+    HttpTaskManagerTest() throws IOException {
+    }
 
     @BeforeEach
-    public void createManager() throws IOException, InterruptedException {
-        File file = new File("data.csv");
-        taskManager = new FileBackedTasksManager(file);
+    public void startServer() throws IOException, InterruptedException {
+        kvServer.start();
+        taskManager = Managers.getDefault();
+        kvTaskClient = new KVTaskClient("http://localhost:8078");
+    }
+
+    @AfterEach
+    public void stopServer() {
+        kvServer.stop();
     }
 
     @Test
     @Override
     public void createNewTaskTest() throws IOException, InterruptedException {
-        final NoSuchElementException exception = assertThrows(NoSuchElementException.class, ()
-                -> taskManager.getHistory());
         super.createNewTaskTest();
-        FileBackedTasksManager managerNew = loadFromFile(new File("data.csv"));
-        assertEquals(managerNew.getHistory(), taskManager.getHistory());
+        String response = kvTaskClient.load(kvTaskClient.getAPI_TOKEN());
+        String responseExpected = "\nid,type,name,status,description,start_time,end_time,duration,epic" +
+                "\n1,TASK,task1,NEW,Description task1,19.05.2023_12:00,19.05.2023_12:35,35,\n\n1";
+
+        assertEquals(responseExpected, response);
     }
 
     @Test
@@ -72,8 +86,11 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
     @Override
     public void createNewEpicTest() throws IOException, InterruptedException {
         super.createNewEpicTest();
-        FileBackedTasksManager managerNew = loadFromFile(new File("data.csv"));
-        assertEquals(managerNew.getHistory(), taskManager.getHistory());
+        String response = kvTaskClient.load(kvTaskClient.getAPI_TOKEN());
+        String responseExpected = "\nid,type,name,status,description,start_time,end_time,duration,epic" +
+                "\n1,EPIC,epic1,NEW,Description epic1,\n\n1";
+
+        assertEquals(responseExpected, response);
     }
 
     @Test
@@ -110,8 +127,12 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
     @Override
     public void createNewSubtaskTest() throws IOException, InterruptedException {
         super.createNewSubtaskTest();
-        FileBackedTasksManager managerNew = loadFromFile(new File("data.csv"));
-        assertEquals(managerNew.getHistory(), taskManager.getHistory());
+        String response = kvTaskClient.load(kvTaskClient.getAPI_TOKEN());
+        String responseExpected = "\nid,type,name,status,description,start_time,end_time,duration,epic" +
+                "\n2,SUBTASK,sub task1,NEW,Description sub task1,19.05.2023_12:00,19.05.2023_12:55,55,1" +
+                "\n1,EPIC,epic1,NEW,Description epic1,19.05.2023_12:00,19.05.2023_12:55,55,\n\n2";
+
+        assertEquals(responseExpected, response);
     }
 
     @Test

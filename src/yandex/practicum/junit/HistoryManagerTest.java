@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import yandex.practicum.service.*;
 import yandex.practicum.tasks.Task;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,14 +20,17 @@ class HistoryManagerTest {
     private Task task4 = new Task("task4", "Description task4", "15", "29.05.2023_12:10");
     private Task task5 = new Task("task5", "Description task5", "40", "23.05.2023_15:10");
 
+    HistoryManagerTest() throws IOException, InterruptedException {
+    }
+
 
     @AfterEach
-    public void createSetting() {
+    public void createSetting() throws IOException, InterruptedException {
         taskManager.deleteAllTasks();
     }
 
     @Test
-    public void addTaskTest() {
+    public void addTaskTest() throws IOException, InterruptedException {
         taskManager.createNewTask(task1);
         taskManager.createNewTask(task2);
         historyManager.addTask(task1);
@@ -44,7 +48,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void removeTest() {
+    public void removeTest() throws IOException, InterruptedException {
         taskManager.createNewTask(task1);
         taskManager.createNewTask(task2);
         taskManager.createNewTask(task3);
@@ -73,7 +77,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void getHistoryTest() {
+    public void getHistoryTest() throws IOException, InterruptedException {
         taskManager.createNewTask(task1);
         taskManager.createNewTask(task2);
         taskManager.createNewTask(task3);

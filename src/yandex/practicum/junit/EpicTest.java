@@ -4,9 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import yandex.practicum.service.InMemoryTaskManager;
 import yandex.practicum.service.Managers;
+import yandex.practicum.service.TaskManager;
 import yandex.practicum.tasks.Epic;
 import yandex.practicum.tasks.Status;
 import yandex.practicum.tasks.Subtask;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,18 +21,21 @@ class EpicTest {
             "20.05.2023_12:00", 1);
     private Subtask subtask3 = new Subtask("sub task3", "Description sub task3", "10",
             "21.05.2023_12:00", 1);
-    private InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
+    private TaskManager inMemoryTaskManager = (InMemoryTaskManager) Managers.getDefault();
+
+    EpicTest() throws IOException, InterruptedException {
+    }
 
 
     @Test
-    public void epicEmpty() {
+    public void epicEmpty() throws IOException, InterruptedException {
         inMemoryTaskManager.createNewEpic(epic1);
 
         assertEquals(Status.NEW, inMemoryTaskManager.getEpicById(1).getStatus());
     }
 
     @Test
-    public void epicAllSubtasksNew() {
+    public void epicAllSubtasksNew() throws IOException, InterruptedException {
         inMemoryTaskManager.createNewEpic(epic1);
         inMemoryTaskManager.createNewSubtask(subtask1);
         inMemoryTaskManager.createNewSubtask(subtask2);
@@ -39,7 +45,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicAllSubtasksDone() {
+    public void epicAllSubtasksDone() throws IOException, InterruptedException {
         inMemoryTaskManager.createNewEpic(epic1);
         inMemoryTaskManager.createNewSubtask(subtask1);
         inMemoryTaskManager.createNewSubtask(subtask2);
@@ -57,7 +63,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicSubtasksNewAndDone() {
+    public void epicSubtasksNewAndDone() throws IOException, InterruptedException {
         inMemoryTaskManager.createNewEpic(epic1);
         inMemoryTaskManager.createNewSubtask(subtask1);
         inMemoryTaskManager.createNewSubtask(subtask2);
@@ -70,7 +76,7 @@ class EpicTest {
     }
 
     @Test
-    public void epicAllSubtasksInProgress() {
+    public void epicAllSubtasksInProgress() throws IOException, InterruptedException {
         inMemoryTaskManager.createNewEpic(epic1);
         inMemoryTaskManager.createNewSubtask(subtask1);
         inMemoryTaskManager.createNewSubtask(subtask2);

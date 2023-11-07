@@ -1,25 +1,23 @@
 package yandex.practicum;
 
-import yandex.practicum.service.FileBackedTasksManager;
+import yandex.practicum.server.KVServer;
+import yandex.practicum.service.HttpTaskManager;
+import yandex.practicum.service.Managers;
 import yandex.practicum.tasks.Epic;
 import yandex.practicum.tasks.Status;
 import yandex.practicum.tasks.Subtask;
 import yandex.practicum.tasks.Task;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-
-import static yandex.practicum.service.FileBackedTasksManager.loadFromFile;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-        File file = new File("data.csv");
+        KVServer kvServer = new KVServer();
+        kvServer.start();
 
-        FileBackedTasksManager manager = new FileBackedTasksManager(file);
+        HttpTaskManager manager = (HttpTaskManager) Managers.getDefault();
 
         Task task1 = new Task("task1", "Description task1", "35", "20.05.2023_12:00");
         Task task2 = new Task("task2", "Description task2", "15", "19.05.2023_12:10");
@@ -72,23 +70,7 @@ public class Main {
         System.out.println("\nИстория вызовов:");
         System.out.println(manager.getHistory());
 
-        FileReader reader = new FileReader(file);
-        BufferedReader br = new BufferedReader(reader);
-
-        while (br.ready()) {
-            String line = br.readLine();
-            System.out.println(line);
-        }
-        br.close();
-
-        FileBackedTasksManager manager1 = loadFromFile(file);
-
-        System.out.println("\nИстория из нового менеджера:");
-        System.out.println(manager1.getHistory());
-        System.out.println("\nЗадачи, записанные в новом менеджере:");
-        System.out.println(manager1.getTasks());
-        System.out.println(manager1.getSubtasks());
-        System.out.println(manager1.getEpics());
+        System.out.println(manager.getKvTaskClient().load(manager.getKvTaskClient().getAPI_TOKEN()));
     }
 }
 
