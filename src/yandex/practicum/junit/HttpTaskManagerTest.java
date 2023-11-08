@@ -37,7 +37,7 @@ class HttpTaskManagerTest extends TaskManagerTest {
     @Override
     public void createNewTaskTest() throws IOException, InterruptedException {
         super.createNewTaskTest();
-        String response = kvTaskClient.load(kvTaskClient.getAPI_TOKEN());
+        String response = kvTaskClient.load(kvTaskClient.getTokenApiClient());
         String responseExpected = "\nid,type,name,status,description,start_time,end_time,duration,epic" +
                 "\n1,TASK,task1,NEW,Description task1,19.05.2023_12:00,19.05.2023_12:35,35,\n\n1";
 
@@ -86,7 +86,7 @@ class HttpTaskManagerTest extends TaskManagerTest {
     @Override
     public void createNewEpicTest() throws IOException, InterruptedException {
         super.createNewEpicTest();
-        String response = kvTaskClient.load(kvTaskClient.getAPI_TOKEN());
+        String response = kvTaskClient.load(kvTaskClient.getTokenApiClient());
         String responseExpected = "\nid,type,name,status,description,start_time,end_time,duration,epic" +
                 "\n1,EPIC,epic1,NEW,Description epic1,\n\n1";
 
@@ -127,7 +127,7 @@ class HttpTaskManagerTest extends TaskManagerTest {
     @Override
     public void createNewSubtaskTest() throws IOException, InterruptedException {
         super.createNewSubtaskTest();
-        String response = kvTaskClient.load(kvTaskClient.getAPI_TOKEN());
+        String response = kvTaskClient.load(kvTaskClient.getTokenApiClient());
         String responseExpected = "\nid,type,name,status,description,start_time,end_time,duration,epic" +
                 "\n2,SUBTASK,sub task1,NEW,Description sub task1,19.05.2023_12:00,19.05.2023_12:55,55,1" +
                 "\n1,EPIC,epic1,NEW,Description epic1,19.05.2023_12:00,19.05.2023_12:55,55,\n\n2";

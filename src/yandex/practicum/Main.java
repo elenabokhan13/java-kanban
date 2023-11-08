@@ -70,7 +70,7 @@ public class Main {
         System.out.println("\nИстория вызовов:");
         System.out.println(manager.getHistory());
 
-        System.out.println(manager.getKvTaskClient().load(manager.getKvTaskClient().getAPI_TOKEN()));
+        System.out.println(manager.getKvTaskClient().load(manager.getKvTaskClient().getTokenApiClient()));
     }
 }
 

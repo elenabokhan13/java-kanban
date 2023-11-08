@@ -31,94 +31,94 @@ public class HttpTaskManager extends FileBackedTasksManager {
     @Override
     public void createNewTask(Task task) throws IOException, InterruptedException {
         super.createNewTask(task);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public void deleteAllTasks() throws IOException, InterruptedException {
         super.deleteAllTasks();
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public Task getTaskById(int newId) throws IOException, InterruptedException {
         super.getTaskById((newId));
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
         return tasks.get(newId);
     }
 
     @Override
     public void deleteTask(int newId) throws IOException, InterruptedException {
         super.deleteTask(newId);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public void updateTask(Task task) throws IOException, InterruptedException {
         super.updateTask(task);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public void createNewEpic(Epic epic) throws IOException, InterruptedException {
         super.createNewEpic(epic);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public void deleteAllEpics() throws IOException, InterruptedException {
         super.deleteAllEpics();
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public Epic getEpicById(int newId) throws IOException, InterruptedException {
         super.getEpicById(newId);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
         return epics.get(newId);
     }
 
     @Override
     public void deleteEpic(int newId) throws IOException, InterruptedException {
         super.deleteEpic(newId);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public void updateEpic(Epic epic) throws IOException, InterruptedException {
         super.updateEpic(epic);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public void createNewSubtask(Subtask subtask) throws IOException, InterruptedException {
         super.createNewSubtask(subtask);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public void deleteAllSubtasks() throws IOException, InterruptedException {
         super.deleteAllSubtasks();
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public Subtask getSubtaskById(int newId) throws IOException, InterruptedException {
         super.getSubtaskById(newId);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
         return subtasks.get(newId);
     }
 
     @Override
     public void deleteSubtask(int newId) throws IOException, InterruptedException {
         super.deleteSubtask(newId);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     @Override
     public void updateSubtask(Subtask subtask) throws IOException, InterruptedException {
         super.updateSubtask(subtask);
-        kvTaskClient.put(kvTaskClient.getAPI_TOKEN(), fileToString(file));
+        kvTaskClient.put(kvTaskClient.getTokenApiClient(), fileToString(file));
     }
 
     private String fileToString(File file) {

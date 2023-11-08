@@ -14,7 +14,8 @@ public class DurationAdapter implements JsonSerializer<Duration>, JsonDeserializ
 
     @Override
     public Duration deserialize(JsonElement jsonElement, Type type,
-                                JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                                JsonDeserializationContext jsonDeserializationContext)
+            throws JsonParseException {
         return Duration.ofMinutes(Long.parseLong(jsonElement.getAsString()));
     }
 }
