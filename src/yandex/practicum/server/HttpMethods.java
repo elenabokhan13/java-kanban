@@ -1,6 +1,6 @@
 package yandex.practicum.server;
 
-public enum Method {
+public enum HttpMethods {
     GET,
     POST,
     DELETE

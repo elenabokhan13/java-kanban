@@ -44,18 +44,11 @@ public class HttpTaskServer {
         try {
             String path = httpExchange.getRequestURI().getPath();
             String requestMethod = httpExchange.getRequestMethod();
-            switch (Method.valueOf(requestMethod)) {
+            switch (HttpMethods.valueOf(requestMethod)) {
                 case GET -> {
                     if (Pattern.matches("/tasks/epic/?id=", path)) {
-                        String epicId = path.replaceFirst("/tasks/epic/?id=", "");
-                        int id = parsePathId(epicId);
-                        if (id != -1) {
-                            String response = gson.toJson(fileBackedTasksManager.getEpicById(id));
-                            sendText(httpExchange, response);
-                        } else {
-                            System.out.println("Получен неверный номер эпика.");
-                            httpExchange.sendResponseHeaders(405, 0);
-                        }
+                        String line = "/tasks/epic/?id=";
+                        processIdRequests(httpExchange, path, line);
                     } else if (Pattern.matches("/tasks/epic/", path)) {
                         String response = gson.toJson(fileBackedTasksManager.getEpics());
                         sendText(httpExchange, response);
@@ -81,16 +74,8 @@ public class HttpTaskServer {
                 }
                 case DELETE -> {
                     if (Pattern.matches("/tasks/epic/?id=$", path)) {
-                        String epicId = path.replaceFirst("/tasks/epic/?id=", "");
-                        int id = parsePathId(epicId);
-                        if (id != -1) {
-                            fileBackedTasksManager.deleteEpic(id);
-                            System.out.println("Удалили эпик №" + id);
-                            httpExchange.sendResponseHeaders(200, 0);
-                        } else {
-                            System.out.println("Получен неверный номер эпика.");
-                            httpExchange.sendResponseHeaders(405, 0);
-                        }
+                        String line = "/tasks/epic/?id=$";
+                        deleteIdRequest(httpExchange, path, line);
                     } else if (Pattern.matches("^/tasks/epic/$", path)) {
                         fileBackedTasksManager.deleteAllEpics();
                         System.out.println("Удалили все эпики.");
@@ -115,29 +100,14 @@ public class HttpTaskServer {
         try {
             String path = httpExchange.getRequestURI().getPath();
             String requestMethod = httpExchange.getRequestMethod();
-            switch (Method.valueOf(requestMethod)) {
+            switch (HttpMethods.valueOf(requestMethod)) {
                 case GET -> {
                     if (Pattern.matches("/tasks/subtask/epic/?id=", path)) {
-                        String epicId = path.replaceFirst("/tasks/subtask/epic/?id=", "");
-                        int id = parsePathId(epicId);
-                        if (id != -1) {
-                            String response = gson.toJson(fileBackedTasksManager
-                                    .printSubtasksInEpicList(fileBackedTasksManager.getEpicById(id)));
-                            sendText(httpExchange, response);
-                        } else {
-                            System.out.println("Получен неверный номер эпика.");
-                            httpExchange.sendResponseHeaders(405, 0);
-                        }
+                        String line = "/tasks/subtask/epic/?id=";
+                        processIdRequests(httpExchange, path, line);
                     } else if (Pattern.matches("/tasks/subtask/?id=", path)) {
-                        String subtaskId = path.replaceFirst("/tasks/subtask/?id=", "");
-                        int id = parsePathId(subtaskId);
-                        if (id != -1) {
-                            String response = gson.toJson(fileBackedTasksManager.getSubtaskById(id));
-                            sendText(httpExchange, response);
-                        } else {
-                            System.out.println("Получен неверный номер подзадачи.");
-                            httpExchange.sendResponseHeaders(405, 0);
-                        }
+                        String line = "/tasks/subtask/?id=";
+                        processIdRequests(httpExchange, path, line);
                     } else if (Pattern.matches("/tasks/subtask/", path)) {
                         String response = gson.toJson(fileBackedTasksManager.getSubtasks());
                         sendText(httpExchange, response);
@@ -163,16 +133,8 @@ public class HttpTaskServer {
                 }
                 case DELETE -> {
                     if (Pattern.matches("/tasks/subtask/?id=", path)) {
-                        String subtaskId = path.replaceFirst("/tasks/subtask/?id=", "");
-                        int id = parsePathId(subtaskId);
-                        if (id != -1) {
-                            fileBackedTasksManager.deleteSubtask(id);
-                            System.out.println("Удалили подзадачу №" + id);
-                            httpExchange.sendResponseHeaders(200, 0);
-                        } else {
-                            System.out.println("Получен неверный номер подзадачи.");
-                            httpExchange.sendResponseHeaders(405, 0);
-                        }
+                        String line = "/tasks/subtask/?id=";
+                        deleteIdRequest(httpExchange, path, line);
                     } else if (Pattern.matches("/tasks/subtask/", path)) {
                         fileBackedTasksManager.deleteAllSubtasks();
                         System.out.println("Удалили все подзадачи.");
@@ -197,18 +159,11 @@ public class HttpTaskServer {
         try {
             String path = httpExchange.getRequestURI().getPath();
             String requestMethod = httpExchange.getRequestMethod();
-            switch (Method.valueOf(requestMethod)) {
+            switch (HttpMethods.valueOf(requestMethod)) {
                 case GET -> {
                     if (Pattern.matches("/tasks/task/?id=", path)) {
-                        String taskId = path.replaceFirst("/tasks/task/?id=", "");
-                        int id = parsePathId(taskId);
-                        if (id != -1) {
-                            String response = gson.toJson(fileBackedTasksManager.getTaskById(id));
-                            sendText(httpExchange, response);
-                        } else {
-                            System.out.println("Получен неверный номер задачи.");
-                            httpExchange.sendResponseHeaders(405, 0);
-                        }
+                        String line = "/tasks/task/?id=";
+                        processIdRequests(httpExchange, path, line);
                     } else if (Pattern.matches("/tasks/task/", path)) {
                         String response = gson.toJson(fileBackedTasksManager.getTasks());
                         sendText(httpExchange, response);
@@ -235,16 +190,8 @@ public class HttpTaskServer {
                 }
                 case DELETE -> {
                     if (Pattern.matches("/tasks/task/?id=$", path)) {
-                        String taskId = path.replaceFirst("/tasks/task/?id=", "");
-                        int id = parsePathId(taskId);
-                        if (id != -1) {
-                            fileBackedTasksManager.deleteTask(id);
-                            System.out.println("Удалили задачу №" + id);
-                            httpExchange.sendResponseHeaders(200, 0);
-                        } else {
-                            System.out.println("Получен неверный номер задачи.");
-                            httpExchange.sendResponseHeaders(405, 0);
-                        }
+                        String line = "/tasks/task/?id=$";
+                        deleteIdRequest(httpExchange, path, line);
                     } else if (Pattern.matches("/tasks/task/", path)) {
                         fileBackedTasksManager.deleteAllTasks();
                         System.out.println("Удалили все задачи.");
@@ -265,12 +212,11 @@ public class HttpTaskServer {
         }
     }
 
-
     private void handleTasks(HttpExchange httpExchange) {
         try {
             String path = httpExchange.getRequestURI().getPath();
             String requestMethod = httpExchange.getRequestMethod();
-            switch (Method.valueOf(requestMethod)) {
+            switch (HttpMethods.valueOf(requestMethod)) {
                 case GET -> {
                     if (Pattern.matches("/tasks/history/", path)) {
                         String response = gson.toJson(fileBackedTasksManager.getHistory());
@@ -311,5 +257,52 @@ public class HttpTaskServer {
         h.getResponseHeaders().add("Content-Type", "application/json");
         h.sendResponseHeaders(200, resp.length);
         h.getResponseBody().write(resp);
+    }
+
+    private void processIdRequests(HttpExchange httpExchange, String path, String line)
+            throws IOException, InterruptedException {
+        String taskId = path.replaceFirst(line, "");
+        int id = parsePathId(taskId);
+        if (id != -1) {
+            String response = switch (line) {
+                case "/tasks/epic/?id=" -> gson.toJson(fileBackedTasksManager.getEpicById(id));
+                case "/tasks/task/?id=" -> gson.toJson(fileBackedTasksManager.getTaskById(id));
+                case "/tasks/subtask/?id=" -> gson.toJson(fileBackedTasksManager.getSubtaskById(id));
+                case "/tasks/subtask/epic/?id=" -> gson.toJson(fileBackedTasksManager
+                        .printSubtasksInEpicList(fileBackedTasksManager.getEpicById(id)));
+                default -> null;
+            };
+            assert response != null;
+            sendText(httpExchange, response);
+        } else {
+            System.out.println("Получен неверный номер эпика.");
+            httpExchange.sendResponseHeaders(405, 0);
+        }
+    }
+
+    private void deleteIdRequest(HttpExchange httpExchange, String path, String line)
+            throws IOException, InterruptedException {
+        String taskId = path.replaceFirst(line, "");
+        int id = parsePathId(taskId);
+        if (id != -1) {
+            switch (line) {
+                case "/tasks/epic/?id=" -> {
+                    fileBackedTasksManager.deleteEpic(id);
+                    System.out.println("Удалили эпик №" + id);
+                }
+                case "/tasks/task/?id=" -> {
+                    fileBackedTasksManager.deleteTask(id);
+                    System.out.println("Удалили задачу №" + id);
+                }
+                case "/tasks/subtask/?id=" -> {
+                    fileBackedTasksManager.deleteSubtask(id);
+                    System.out.println("Удалили подзадачу №" + id);
+                }
+            }
+            httpExchange.sendResponseHeaders(200, 0);
+        } else {
+            System.out.println("Получен неверный номер задачи.");
+            httpExchange.sendResponseHeaders(405, 0);
+        }
     }
 }
